@@ -1,14 +1,18 @@
 import './App.css'
-import { ModeToggle } from './components/mode-toggle'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import HomePage from './pages/home/homepage'
 
 function App() {
 
   return (
-    <>
-      <div className='text-md'>app home
-        <ModeToggle />
-      </div>
-    </>
+    <main className='min-h-screen w-full bg-neutral-50 dark:bg-[#0e100f]'>
+      <Router>
+        <Routes>
+          {/** Default Routes */}
+          <Route path="/" element={<HomePage />} />
+        </Routes>
+      </Router>
+    </main>
   )
 }
 
