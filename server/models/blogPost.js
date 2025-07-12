@@ -8,6 +8,7 @@ const BlogPostSchema = new mongoose.Schema({
     tags: [{ type: String }],
     author: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
     isDraft: { type: Boolean, default: 0 },
+    views: { type: Number, default: 0 },
     generatedByAI: { type: Boolean, default: false },
 }, {
     timestamps: true

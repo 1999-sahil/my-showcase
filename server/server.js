@@ -5,6 +5,7 @@ const path = require("path");
 const connectDB = require("./config/db");
 
 const authRoute = require("./routes/authRoute");
+const blogPostRoute = require("./routes/blogPostRoute");
 
 const app = express();
 
@@ -23,6 +24,7 @@ app.use(express.json());
 
 // Routes
 app.use("/api/auth", authRoute);
+app.use("/api/blogs/posts", blogPostRoute);
 
 // Serve uploads folder
 app.use("/uploads", express.static(path.join(__dirname, "uploads"), {}));
