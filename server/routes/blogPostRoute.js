@@ -1,28 +1,29 @@
 const express = require("express");
 const { protect } = require("../middlewares/authMiddleware");
 const {
-    createPost,
-    updatePost,
-    deletePost,
-    getAllPosts,
-    getPostBySlug,
-    getPostsByTag,
-    searchPosts,
-    getTopPosts,
-    incrementViewCount
+  createPost,
+  updatePost,
+  deletePost,
+  getAllPosts,
+  getPostBySlug,
+  getPostsByTag,
+  searchPosts,
+  getTopPosts,
+  incrementViewCount,
 } = require("../controllers/blogPostController");
 
 const router = express.Router();
 
 // Admin-only middleware
 const adminOnly = (req, res, next) => {
-    if (req.user && req.user.role == "admin") {
-        next();
-    } else {
-        res.status(403).json({ message: "Admin access only" });
-    }
+  if (req.user && req.user.role == "admin") {
+    next();
+  } else {
+    res.status(403).json({ message: "Admin access only" });
+  }
 };
 
+// All Routes
 router.post("/", protect, adminOnly, createPost);
 router.get("/", getAllPosts);
 router.get("/slug/:slug", getPostBySlug);

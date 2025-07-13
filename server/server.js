@@ -6,6 +6,10 @@ const connectDB = require("./config/db");
 
 const authRoute = require("./routes/authRoute");
 const blogPostRoute = require("./routes/blogPostRoute");
+const projectDocRoute = require("./routes/projectDocRoute");
+const notesRoute = require("./routes/notesRoute");
+const dashboardRoute = require("./routes/dashboardRoute");
+const aiRoute = require("./routes/aiRoute");
 
 const app = express();
 
@@ -25,6 +29,11 @@ app.use(express.json());
 // Routes
 app.use("/api/auth", authRoute);
 app.use("/api/blogs/posts", blogPostRoute);
+app.use("/api/projects", projectDocRoute);
+app.use("/api/notes", notesRoute);
+app.use("/api/dashboard-summary", dashboardRoute);
+app.use("/api/ai", aiRoute);
+
 
 // Serve uploads folder
 app.use("/uploads", express.static(path.join(__dirname, "uploads"), {}));
