@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, motion, useMotionValueEvent, useScroll } from "motion/react";
 
 import { navlinks } from "@/constant/navbar";
 import Logo from "../logo";
@@ -10,17 +10,40 @@ import { menuVars } from "@/animations/navbarVariants";
 import MobileNavigation from "./mobile-navigation";
 import { AlignRight, X } from "lucide-react";
 import { FaGithub, FaLinkedin } from "react-icons/fa";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 
 function Navbar() {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState<boolean>(false);
+  const [scrolled, setScrolled] = useState<boolean>(false);
+  const { scrollY } = useScroll();
+  const isSmallScreen = useMediaQuery("(max-width: 640px)");
 
   const toggleMenu = () => {
     setOpen((prevOpen) => !prevOpen);
   };
 
+  useMotionValueEvent(scrollY, "change", (latest) => {
+    if (latest > 20) {
+      setScrolled(true);
+    } else {
+      setScrolled(false);
+    }
+  });
+
   return (
-    <header className="fixed top-0 left-0 w-full z-50">
-      <nav className="flex items-center justify-between px-5 py-3 w-full max-w-5xl mx-auto">
+    <header className="fixed inset-x-0 top-0 left-0 w-full z-50">
+      <motion.nav
+        animate={{
+          boxShadow: scrolled ? "var(--shadow-navbar)" : "none",
+          width: scrolled ? (isSmallScreen ? "95%" : "75%") : "100%",
+          y: scrolled ? 10 : 0,
+        }}
+        transition={{
+          duration: 0.3,
+          ease: "linear",
+        }}
+        className="flex items-center justify-between rounded-xl px-4 py-3 w-full max-w-6xl mx-auto"
+      >
         <Logo />
         <div className="hidden md:flex items-center justify-between border p-2 rounded-xl min-w-2xl bg-white dark:bg-neutral-900">
           <div className="flex items-center space-x-8 pl-2">
@@ -47,7 +70,7 @@ function Navbar() {
         <div className="cursor-pointer md:hidden" onClick={toggleMenu}>
           <AlignRight />
         </div>
-      </nav>
+      </motion.nav>
 
       {/** Mobile Navigation */}
       <AnimatePresence>
