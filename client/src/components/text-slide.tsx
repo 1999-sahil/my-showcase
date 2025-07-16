@@ -39,7 +39,7 @@ export default function VerticalSlider() {
   return (
     <div className="">
       <div className="flex justify-center">
-        <div className="h-[25px] w-[150px] overflow-hidden bg-white/80 dark:bg-neutral-900/50 border dark:border-neutral-800/50 shadow rounded-md">
+        <div className="h-[25px] w-[130px] lg:h-[25px] lg:w-[150px] overflow-hidden bg-white/80 dark:bg-neutral-900/50 border dark:border-neutral-800/50 shadow rounded-sm">
           <motion.ul
             className="list-none m-0 p-0 flex flex-col items-center justify-center"
             animate={controls}
@@ -48,7 +48,7 @@ export default function VerticalSlider() {
             {slides.map((text, index) => (
               <li
                 key={index}
-                className="text-sm leading-[25px] font-poppins text-neutral-500 dark:text-neutral-200/50"
+                className="text-xs lg:text-sm leading-[25px] font-poppins text-neutral-500 dark:text-neutral-200/50"
               >
                 {text}
               </li>

@@ -1,6 +1,11 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
-import { AnimatePresence, motion, useMotionValueEvent, useScroll } from "motion/react";
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import {
+  AnimatePresence,
+  motion,
+  useMotionValueEvent,
+  useScroll,
+} from "motion/react";
 
 import { navlinks } from "@/constant/navbar";
 import Logo from "../logo";
@@ -17,9 +22,26 @@ function Navbar() {
   const [scrolled, setScrolled] = useState<boolean>(false);
   const { scrollY } = useScroll();
   const isSmallScreen = useMediaQuery("(max-width: 640px)");
+  const [isAdminLoggedIn, setIsAdminLoggedIn] = useState<boolean>(false);
+
+  const navigate = useNavigate();
 
   const toggleMenu = () => {
     setOpen((prevOpen) => !prevOpen);
+  };
+
+  const handleAdminLogin = () => {
+    if (isAdminLoggedIn) {
+      navigate("/admin/dashboard");
+    } else {
+      navigate("/admin-login");
+    }
+  };
+
+  const handleAdminLogout = () => {
+    localStorage.removeItem("token");
+    setIsAdminLoggedIn(false);
+    navigate("/"); // or navigate("/") if you prefer
   };
 
   useMotionValueEvent(scrollY, "change", (latest) => {
@@ -29,6 +51,20 @@ function Navbar() {
       setScrolled(false);
     }
   });
+
+  useEffect(() => {
+    const checkAdminStatus = () => {
+      const token = localStorage.getItem("token");
+      setIsAdminLoggedIn(!!token);
+    };
+
+    window.addEventListener("storage", checkAdminStatus);
+    checkAdminStatus(); // initial check
+
+    return () => {
+      window.removeEventListener("storage", checkAdminStatus);
+    };
+  }, []);
 
   return (
     <header className="fixed inset-x-0 top-0 left-0 w-full z-50">
@@ -57,7 +93,10 @@ function Navbar() {
               </Link>
             ))}
           </div>
-          <button className="bg-[#111] text-white dark:bg-white dark:text-black font-medium rounded-md text-xs px-4 py-1 font-inter">
+          <button
+            onClick={handleAdminLogin}
+            className="bg-[#111] text-white dark:bg-white dark:text-black font-medium rounded-md text-xs px-4 py-1 font-inter"
+          >
             Admin
           </button>
         </div>
@@ -97,28 +136,54 @@ function Navbar() {
                 initial="initial"
                 animate="open"
                 exit="initial"
-                className="flex flex-col h-full pt-10 gap-5"
+                className="flex flex-col h-full pt-10 justify-between"
               >
-                {navlinks.map((link) => {
-                  return (
-                    <div className="overflow-hidden">
-                      <MobileNavigation
-                        key={link.title}
-                        title={link.title}
-                        href={link.href}
-                      />
+                <div className="flex flex-col gap-5">
+                  {navlinks.map((link) => (
+                    <div className="overflow-hidden" key={link.title}>
+                      <MobileNavigation title={link.title} href={link.href} />
                     </div>
-                  );
-                })}
-                <div className="w-full flex flex-col gap-5 mt-5 items-center justify-center">
-                  <div className="flex items-center justify-between w-full rounded-lg px-4 py-2 bg-neutral-200/50 dark:bg-neutral-900/50">
-                    <h2 className="text-sm font-inter text-zinc-800 dark:text-neutral-500">Appearance</h2>
-                    <ModeToggle />
+                  ))}
+
+                  <div className="w-full flex flex-col gap-5 mt-5 items-center justify-center">
+                    <div className="flex items-center justify-between w-full rounded-lg px-4 py-2 bg-neutral-200/50 dark:bg-neutral-900/50">
+                      <h2 className="text-sm font-inter text-zinc-800 dark:text-neutral-500">
+                        Appearance
+                      </h2>
+                      <ModeToggle />
+                    </div>
+                    <div className="flex items-center gap-4 text-[#333] dark:text-neutral-400">
+                      <FaGithub className="size-5 hover:text-black dark:hover:text-white" />
+                      <FaLinkedin className="size-5 hover:text-black dark:hover:text-white" />
+                    </div>
                   </div>
-                  <div className="flex items-center gap-4 text-[#333] dark:text-neutral-400">
-                    <FaGithub className="size-5 hover:text-black dark:hover:text-white" />
-                    <FaLinkedin className="size-5 hover:text-black dark:hover:text-white" />
-                  </div>
+                </div>
+
+                {/* Bottom Login/Dashboard Button */}
+                <div className="w-full flex flex-col gap-3">
+                  {isAdminLoggedIn ? (
+                    <>
+                      <button
+                        onClick={handleAdminLogin}
+                        className="w-full text-center bg-[#212126] text-white dark:bg-neutral-100 dark:text-black font-medium rounded-md text-sm px-4 py-2 font-inter"
+                      >
+                        Dashboard
+                      </button>
+                      <button
+                        onClick={handleAdminLogout}
+                        className="w-full text-center bg-white dark:bg-neutral-900/50 border text-[#212126] dark:text-white font-medium rounded-md text-sm px-4 py-2 font-inter"
+                      >
+                        Logout
+                      </button>
+                    </>
+                  ) : (
+                    <button
+                      onClick={handleAdminLogin}
+                      className="w-full text-center bg-[#212126] text-white dark:bg-neutral-100 dark:text-black font-medium rounded-md text-sm px-4 py-2 font-inter"
+                    >
+                      Admin Login
+                    </button>
+                  )}
                 </div>
               </motion.div>
             </div>

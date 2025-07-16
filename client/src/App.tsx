@@ -1,10 +1,11 @@
 import "./App.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+
 import HomePage from "./pages/home/homepage";
-import PrivateRoute from "./routes/privateRoute";
-import AdminLogin from "./pages/admin/adminLogin";
 import Dashboard from "./pages/admin/dashboard";
+import PrivateRoute from "./routes/privateRoute";
 import UserProvider from "./context/userContext";
+import Login from "./components/auth/login";
 
 function App() {
   return (
@@ -15,12 +16,13 @@ function App() {
             {/** Default Routes */}
             <Route path="/" element={<HomePage />} />
 
-            <Route path="/admin-login" element={<AdminLogin />} />
+            <Route path="/admin-login" element={<Login />} />
 
             {/** Admin Routes */}
             <Route element={<PrivateRoute allowedRoles={["admin"]} />}>
               <Route path="/admin/dashboard" element={<Dashboard />} />
             </Route>
+            
           </Routes>
         </Router>
       </main>

@@ -8,7 +8,7 @@ interface User {
   email: string;
   name?: string; // Optional property
   token: string; // Assuming the token is part of the user object from the API response
-  // Add other user properties here
+  role: string;
 }
 
 // 2. Define the shape of the context value
